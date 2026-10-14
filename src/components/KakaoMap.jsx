@@ -36,6 +36,7 @@ export default function KakaoMap({ region, center, currentCenter, places, select
     observer.observe(canvas.current)
     return () => {
       observer.disconnect()
+      map.setKeyboardShortcuts(false)
       map.removeControl(zoom)
       mapRef.current = null
     }
@@ -95,7 +96,7 @@ export default function KakaoMap({ region, center, currentCenter, places, select
   }, [mapsApi, selected, mapPlaces])
 
   return <section className="kakao-map-panel" aria-label="카카오 지도 · 예시 장소와 현재 위치"><header className="kakao-map-toolbar"><span id="map-title"><iconify-icon icon="solar:map-point-linear" />{region === 'current' ? '현재 위치 기준' : `${areas[region].name} 둘러보기`}</span><button className="map-locate" type="button" onClick={locate} disabled={locating}><iconify-icon icon="solar:gps-linear" />{locating ? '확인 중…' : '현재 위치'}</button></header>
-    <div className="kakao-map-stage"><div ref={canvas} className="kakao-map-canvas" tabIndex={0} aria-label="카카오 지도. 장소 선택은 오른쪽 목록에서도 가능합니다." />{!mapsApi && <div className="kakao-map-status"><iconify-icon icon="solar:map-linear" /><p role={error ? 'alert' : 'status'}>{error || '카카오 지도를 불러오고 있습니다.'}</p>{error && <button type="button" onClick={() => { setError(''); setRetry(value => value + 1) }}>다시 불러오기</button>}{error && currentCenter && <a href={`https://map.kakao.com/link/map/${currentCenter.lat},${currentCenter.lng}`} target="_blank" rel="noopener noreferrer">카카오에서 현재 위치 보기 ↗</a>}</div>}</div>
+    <div className="kakao-map-stage"><div ref={canvas} className="kakao-map-canvas" tabIndex={0} aria-label="카카오 지도. 장소 목록에서도 선택할 수 있습니다." />{!mapsApi && <div className="kakao-map-status"><iconify-icon icon="solar:map-linear" /><p role={error ? 'alert' : 'status'}>{error || '카카오 지도를 불러오고 있습니다.'}</p>{error && <button type="button" onClick={() => { setError(''); setRetry(value => value + 1) }}>다시 불러오기</button>}{error && currentCenter && <a href={`https://map.kakao.com/link/map/${currentCenter.lat},${currentCenter.lng}`} target="_blank" rel="noopener noreferrer">카카오에서 현재 위치 보기 ↗</a>}</div>}</div>
     <footer className="kakao-map-legend"><span><i className="place-dot" />예시 장소</span><span><i className="location-dot" />{currentCenter ? '현재 위치' : '위치 버튼으로 확인'}{currentCenter?.accuracy > 0 && ` · 오차 약 ${Math.round(currentCenter.accuracy)}m`}</span><p>지도는 카카오 제공 · 장소는 체험용 예시입니다.</p></footer>
   </section>
 }

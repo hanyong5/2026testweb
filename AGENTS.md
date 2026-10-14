@@ -21,6 +21,7 @@
 - `src/stores/authStore.js`, `nearbyStore.js`, `uiStore.js`: Zustand 기반 인증·회원 정보, 탐색·위치·북마크, 메뉴·슬라이드 공통 상태. `useAuth`는 Auth 구독 수명만 관리한다. 화면 전용 입력·검증 상태는 React로 관리한다.
 - `src/components/Nearby.jsx`: 탐색 화면, 장소 카드, 검색·필터·저장·위치·상세창 동작.
 - `src/components/Nearby.css`: 화면 스타일, 반응형 규칙, 모션.
+- `src/components/KakaoMap.jsx`, `KakaoMap.css`, `src/lib/kakaoMaps.js`: 카카오 지도 SDK 로딩·지역/장소 마커·현재 위치와 정확도·실패 안내. 전용 지도 컨테이너 내부는 SDK가 관리한다.
 - `src/components/HeroSlider.jsx`, `HeroSlider.css`: 히어로 슬라이더와 전용 스타일. React 상태로 전환하고 모바일 스와이프를 지원한다.
 - `src/components/RecentNotices.jsx`, `RecentNotices.css`: 홈의 최근 공지 최대 3개 카드와 상세 링크. `src/stores/recentNoticeStore.js`는 게시판 검색 상태와 별도로 최신 공지를 관리한다.
 - `src/components/nearbyData.js`: 지역과 예시 장소 데이터.
@@ -38,8 +39,8 @@
 - 공지 이미지는 JPG·PNG·WebP 최대 3장·장당 5MB로 제한한다. 파일 작업은 Storage API만 사용하며 참조 중인 파일을 삭제하지 않는다. 저장 실패 시 신규 업로드 정리를 시도하고 미리보기를 유지한다. blob URL은 삭제·취소·종료 시 해제한다.
 - 기존 한국어 문구와 UTF-8 인코딩을 유지한다.
 - 기존 CSS 변수와 반응형 규칙을 우선 활용한다. 현재 앱은 Tailwind 런타임을 사용하지 않는다.
-- 장소는 예시 데이터이며 지도는 개념도다. 실시간 매장 정보나 실제 도보 거리로 표현하지 않는다.
-- 현재 위치 좌표는 메모리에서만 사용한다. 별도 요청 없이 서버 전송이나 영구 저장을 추가하지 않는다.
+- 지도는 카카오 제공 지형이며 장소는 예시 데이터다. 실시간 매장 정보나 실제 도보 거리로 표현하지 않는다. React 화면을 HTML 문자열이나 수동 DOM으로 생성하지 않으며 SDK 지도만 전용 컨테이너에서 관리한다.
+- 현재 위치 좌표·정확도는 메모리에만 유지한다. 카카오 지도 표시를 위한 SDK 통신 외에 별도 앱 서버 전송·영구 저장을 추가하지 않는다. 위치 버튼을 누를 때만 권한을 요청한다.
 - 북마크는 `gyeot-saved` 키에 장소 ID 배열로 저장하며, 저장소 오류에도 탐색이 가능해야 한다.
 - 페이지 주소는 `#/`, `#/about`, `#/products`, `#/contact`, `#/community`, `#/notices`다. 홈 섹션 링크(`#discover` 등)와의 호환을 유지한다.
 - 온라인문의는 파일 생성·다운로드 방식이다. 실제 서버 접수나 메일 발송 없이 접수 완료로 표시하지 않는다. 문의 입력은 영구 저장하지 않는다.
